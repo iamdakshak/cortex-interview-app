@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { Session } from "@supabase/supabase-js";
 import { supabase, ADMIN_EMAIL, isSupabaseConfigured } from "@/lib/supabase";
 import type { AuthUser, Profile, Role } from "@/types";
 
@@ -27,23 +28,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     let active = true;
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!active) return;
-      if (data.session?.user) {
-        const profile = await loadOrCreateProfile(data.session.user.id, data.session.user.email ?? "");
-        setUser({ id: data.session.user.id, email: data.session.user.email ?? "", profile });
+    const applySession = async (session: Session | null, { finishLoading }: { finishLoading: boolean }) => {
+      try {
+        if (session?.user) {
+          const profile = await loadOrCreateProfile(session.user.id, session.user.email ?? "");
+          if (!active) return;
+          setUser({ id: session.user.id, email: session.user.email ?? "", profile });
+        } else if (active) {
+          setUser(null);
+        }
+      } catch (err) {
+        // A profile load failure (e.g. RLS blocked, network blip) must not wedge
+        // the app on the loading spinner — drop to signed-out and let the user retry.
+        console.error("Failed to load profile", err);
+        if (active) setUser(null);
+      } finally {
+        if (active && finishLoading) setLoading(false);
       }
-      setLoading(false);
-    });
+    };
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!active) return;
-      if (session?.user) {
-        const profile = await loadOrCreateProfile(session.user.id, session.user.email ?? "");
-        setUser({ id: session.user.id, email: session.user.email ?? "", profile });
-      } else {
-        setUser(null);
-      }
+    supabase.auth
+      .getSession()
+      .then(({ data }) => applySession(data.session, { finishLoading: true }))
+      .catch((err) => {
+        console.error("Failed to get session", err);
+        if (active) setLoading(false);
+      });
+
+    // IMPORTANT: do not await supabase calls directly inside this callback —
+    // the GoTrue client holds a lock while firing events, and awaiting another
+    // supabase call here can deadlock (spinner hangs forever on reload).
+    // Defer with setTimeout so the callback returns before we touch the client.
+    // Also skip INITIAL_SESSION: getSession() above already handled it.
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION") return;
+      setTimeout(() => {
+        if (active) applySession(session, { finishLoading: false });
+      }, 0);
     });
 
     return () => {
