@@ -1,0 +1,12 @@
+[
+  { "id": "t-js",        "slug": "javascript", "name": "JavaScript",    "color": "#f7df1e" },
+  { "id": "t-ts",        "slug": "typescript", "name": "TypeScript",    "color": "#3178c6" },
+  { "id": "t-react",     "slug": "react",      "name": "React",         "color": "#61dafb" },
+  { "id": "t-css",       "slug": "css",        "name": "CSS",           "color": "#2965f1" },
+  { "id": "t-html",      "slug": "html",       "name": "HTML",          "color": "#e34f26" },
+  { "id": "t-dsa",       "slug": "dsa",        "name": "DSA",           "color": "#10b981" },
+  { "id": "t-system",    "slug": "system-design", "name": "System Design", "color": "#8b5cf6" },
+  { "id": "t-node",      "slug": "node",       "name": "Node.js",       "color": "#539e43" },
+  { "id": "t-perf",      "slug": "performance","name": "Performance",   "color": "#f59e0b" },
+  { "id": "t-a11y",      "slug": "accessibility","name": "Accessibility","color": "#06b6d4" }
+]

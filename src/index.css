@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 243 75% 59%;
+    --radius: 0.6rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 5.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 5.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 243 75% 67%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 18%;
+    --input: 240 3.7% 18%;
+    --ring: 243 75% 67%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* --- TipTap editor styles --- */
+.ProseMirror {
+  @apply min-h-[200px] outline-none;
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply text-muted-foreground pointer-events-none float-left h-0;
+}
+.ProseMirror pre {
+  @apply bg-muted rounded-md p-3 my-3 text-sm overflow-x-auto font-mono;
+}
+.ProseMirror code {
+  @apply bg-muted rounded px-1.5 py-0.5 text-sm font-mono;
+}
+.ProseMirror pre code {
+  @apply bg-transparent p-0;
+}
+.ProseMirror h1 { @apply text-2xl font-bold mt-4 mb-2; }
+.ProseMirror h2 { @apply text-xl font-bold mt-4 mb-2; }
+.ProseMirror h3 { @apply text-lg font-bold mt-3 mb-2; }
+.ProseMirror ul { @apply list-disc pl-6 my-2; }
+.ProseMirror ol { @apply list-decimal pl-6 my-2; }
+.ProseMirror blockquote { @apply border-l-4 border-muted-foreground/30 pl-4 italic my-3; }
+.ProseMirror a { @apply text-primary underline; }
+
+/* --- Rendered Q&A content --- */
+.prose-content h1 { @apply text-2xl font-bold mt-4 mb-2; }
+.prose-content h2 { @apply text-xl font-bold mt-4 mb-2; }
+.prose-content h3 { @apply text-lg font-bold mt-3 mb-2; }
+.prose-content p  { @apply my-2 leading-relaxed; }
+.prose-content ul { @apply list-disc pl-6 my-2 space-y-1; }
+.prose-content ol { @apply list-decimal pl-6 my-2 space-y-1; }
+.prose-content blockquote { @apply border-l-4 border-primary/30 pl-4 italic my-3 text-muted-foreground; }
+.prose-content a  { @apply text-primary underline underline-offset-2; }
+.prose-content :not(pre) > code {
+  @apply bg-muted rounded px-1.5 py-0.5 text-[0.875em] font-mono;
+}
+.prose-content pre {
+  @apply rounded-md my-3 overflow-x-auto text-sm;
+  background: hsl(var(--muted));
+}
+.prose-content pre code {
+  @apply block p-4 bg-transparent font-mono;
+}
+.prose-content .shiki {
+  @apply rounded-md my-3 overflow-x-auto text-sm p-4;
+}
+
+/* Scrollbar in dark mode */
+.dark ::-webkit-scrollbar { @apply w-2 h-2; }
+.dark ::-webkit-scrollbar-track { @apply bg-transparent; }
+.dark ::-webkit-scrollbar-thumb { @apply bg-muted-foreground/20 rounded; }
+
+/* Selection highlight picks up brand color */
+::selection {
+  background: hsl(var(--primary) / 0.25);
+  color: hsl(var(--foreground));
+}
+
+/* Focus ring refinement — less jarring than default outline */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 4px);
+}
