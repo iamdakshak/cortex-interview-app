@@ -81,13 +81,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     if (!supabase) throw new Error("Supabase is not configured. Add env vars and redeploy.");
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
+    // Populate user synchronously so callers can navigate to a protected route
+    // immediately after this resolves. onAuthStateChange fires async via
+    // setTimeout, which is too late for the Login page's post-submit redirect.
+    if (data.user) {
+      const profile = await loadOrCreateProfile(data.user.id, data.user.email ?? "");
+      setUser({ id: data.user.id, email: data.user.email ?? "", profile });
+    }
   };
 
   const signOut = async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
+    setUser(null);
   };
 
   const updateProfile: AuthContextValue["updateProfile"] = async (patch) => {
