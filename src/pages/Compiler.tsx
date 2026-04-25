@@ -79,7 +79,7 @@ export default function Compiler() {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <Card className="flex flex-col">
-        <CardHeader className="flex-row items-center justify-between pb-3">
+        <CardHeader className="flex flex-wrap items-center justify-between gap-2 pb-3">
           <CardTitle className="text-base">JavaScript Editor</CardTitle>
           <div className="flex gap-1">
             <Button size="sm" variant="outline" onClick={() => setCode("")}><Trash2 className="h-3.5 w-3.5" /> Clear</Button>
@@ -87,27 +87,29 @@ export default function Compiler() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <Editor
-            height="60vh"
-            defaultLanguage="javascript"
-            value={code}
-            onChange={(v) => setCode(v ?? "")}
-            theme={theme === "dark" ? "vs-dark" : "vs-light"}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 13,
-              scrollBeyondLastLine: false,
-              wordWrap: "on",
-              automaticLayout: true,
-            }}
-          />
+          <div className="h-[45vh] sm:h-[55vh] lg:h-[60vh]">
+            <Editor
+              height="100%"
+              defaultLanguage="javascript"
+              value={code}
+              onChange={(v) => setCode(v ?? "")}
+              theme={theme === "dark" ? "vs-dark" : "vs-light"}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 13,
+                scrollBeyondLastLine: false,
+                wordWrap: "on",
+                automaticLayout: true,
+              }}
+            />
+          </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="pb-3"><CardTitle className="text-base">Console</CardTitle></CardHeader>
         <CardContent>
-          <div className="h-[60vh] overflow-auto rounded-md bg-muted/40 p-3 font-mono text-xs">
+          <div className="h-[40vh] sm:h-[50vh] lg:h-[60vh] overflow-auto rounded-md bg-muted/40 p-3 font-mono text-xs">
             {logs.length === 0 ? (
               <p className="text-muted-foreground">No output yet. Hit Run.</p>
             ) : (

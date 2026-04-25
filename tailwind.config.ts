@@ -7,7 +7,9 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      // Responsive gutters: 1rem on phones recovers ~32px of usable width that
+      // a fixed 2rem stole, while desktops keep the breathing room.
+      padding: { DEFAULT: "1rem", sm: "1.5rem", lg: "2rem" },
       screens: { "2xl": "1400px" },
     },
     extend: {

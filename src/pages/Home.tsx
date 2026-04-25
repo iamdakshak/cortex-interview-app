@@ -91,7 +91,9 @@ export default function Home() {
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Topics
             </h3>
-            <div className="flex flex-col gap-1">
+            {/* Mobile: horizontal scroll keeps the topics to one row instead of
+                a tall list that pushes the question feed below the fold. */}
+            <div className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
               <TopicChip active={topic === "all"} onClick={() => setTopic("all")} color="#6366f1" label="All topics" />
               {TOPICS.map((t) => (
                 <TopicChip
@@ -244,7 +246,7 @@ function TopicChip({ active, label, color, onClick }: { active: boolean; label: 
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-all",
+        "flex shrink-0 items-center gap-2 whitespace-nowrap rounded-md border px-2.5 py-1.5 text-sm transition-all lg:border-transparent",
         "hover:bg-accent hover:text-accent-foreground",
         active && "bg-accent text-accent-foreground font-medium shadow-sm",
       )}
